@@ -369,6 +369,7 @@ Database changes are applied automatically on start.
 | `sudo: unknown user btl` | Step 5 `useradd` not run. |
 | `ssh-keygen`: saving key failed | `/opt/btl-checklist/.ssh` missing: run the `mkdir` in step 5. |
 | `git clone`: `Permission denied (publickey)` | Deploy key not added, or cloned as root instead of `sudo -u btl`. |
+| `git pull`: "detected dubious ownership" | Ran git as root. Use `sudo -u btl git pull`; don't add `safe.directory`. |
 | Folder empty after clone | Code not pushed to `REPO` yet; push, then `sudo -u btl git -C /opt/btl-checklist/app pull`. |
 | `npm test`: "Could not find …" | Extra words were pasted after `npm test`. |
 | `curl` right after start: connection refused | App still starting; retry after a second. |
