@@ -119,6 +119,7 @@ details summary { cursor: pointer; color: var(--accent); margin: 0.3rem 0; }
 
 progress { width: 100%; min-width: 180px; height: 0.6rem; accent-color: var(--ok); }
 .tray-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.8rem; }
+.tray-list li { display: flex; flex-direction: column; gap: 0.3rem; }
 .tray-link { display: flex; flex-direction: column; gap: 0.4rem; text-decoration: none; color: var(--text); margin: 0; }
 .tray-link:hover { border-color: var(--accent); }
 

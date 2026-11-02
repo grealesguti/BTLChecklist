@@ -15,7 +15,7 @@ node scripts/smoke.mjs http://localhost:5173   # end-to-end check against the de
 
 ## Production (CERN OpenStack VM + nginx)
 
-Step-by-step guide: [DEPLOY.md](DEPLOY.md#cern-vm-openstack--nginx). How it is hosted and why:
+Step-by-step guide: [CERN_VM_SETUP.md](CERN_VM_SETUP.md). How it is hosted and why:
 [ROADMAP.md §7](ROADMAP.md#7-hosting-at-cern-how-it-runs). DEPLOY.md also covers the
 Cloudflare tunnel and TrueNAS + NPMplus alternatives.
 

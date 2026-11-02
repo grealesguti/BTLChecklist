@@ -31,6 +31,7 @@
 	<div class="hero-side">
 		<progress max={data.total} value={data.passed}></progress>
 		<span class="small">{data.passed}/{data.total} steps passed</span>
+		<a class="button" href="/tray/{data.tray.id}/record?print">Export PDF</a>
 		<a class="button ghost" href="/tray/{data.tray.id}/history">History &amp; downloads →</a>
 		<span class="inline">
 			<button type="button" class="ghost" onclick={() => showAll(true)}>Show all images</button>

@@ -24,6 +24,7 @@
 					<progress max={data.total} value={t.passed}></progress>
 					<span class="muted small">{t.passed}/{data.total} steps · last activity {t.last.slice(0, 16).replace('T', ' ')} UTC</span>
 				</a>
+				<a class="small" href="/tray/{t.id}/log.csv" download>Log (CSV / Excel)</a>
 			</li>
 		{/each}
 	</ul>

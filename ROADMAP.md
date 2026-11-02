@@ -292,7 +292,7 @@ the only state is `.env` + `data/checklist.db`):
 3. Give the GitLab project to a gitlab.cern.ch **group** (not a personal namespace), with the
    e-group members as maintainers.
 4. Create the new VM in the shared project with the `landb-*` properties set to the e-group,
-   and set it up with DEPLOY.md "CERN VM" C1–C5.
+   and set it up with [CERN_VM_SETUP.md](CERN_VM_SETUP.md) (step 9 there moves the data).
 5. Announce a short stop, stop the app on `btltestserver`, copy `.env` and
    `data/checklist.db` to the new VM, start it there, check the trays and history are all there.
 6. If the hostname changes: update `ORIGIN`, nginx `server_name`, certificate, and tell users

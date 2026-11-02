@@ -1,4 +1,5 @@
 <script>
+	import { onMount } from 'svelte';
 	import { SECTIONS, FIELDS, HEADER_FIELDS, COMPONENTS, rollerOrientation, sectionFields } from '#lib/checklist.js';
 
 	let { data } = $props();
@@ -6,6 +7,8 @@
 	const when = (e) => (e ? `${e.person_name}, ${e.at.slice(0, 10)}` : '');
 	const val = (e) => (e ? String(e.payload.name ?? e.payload.value) : '');
 	const rev = (e) => (e && e.rev > 1 ? ` (rev. ${e.rev})` : '');
+	// "Export PDF" on the checklist links here with ?print: open the print / Save-as-PDF dialog directly.
+	onMount(() => new URLSearchParams(location.search).has('print') && window.print());
 </script>
 
 <svelte:head><title>Record · {data.tray.designation}</title></svelte:head>
