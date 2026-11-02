@@ -17,6 +17,83 @@ Steps marked *(once)* are only needed the first time.
 The full runbook (VM, security group, keys, git, nginx, moving the data, troubleshooting)
 is [CERN_VM_SETUP.md](CERN_VM_SETUP.md). Why it is hosted this way: [ROADMAP.md §7](ROADMAP.md#7-hosting-at-cern-how-it-runs).
 
+### Redeploying after a change
+
+The VM never gets files copied by hand: every change goes through git.
+
+**1. On your PC** (project folder):
+
+```
+npm test
+npm run build
+git add .
+git commit -m "what changed"
+git push
+```
+
+`npm test` must end with `fail 0` and the build must succeed before pushing: the VM runs exactly
+what is pushed. Check the change with `npm run dev` first if it touches the pages.
+
+**2. On the VM** (log in as root, see CERN_VM_SETUP.md step 3). Back up the database first,
+then update as user `btl` (running git or npm as root gives "dubious ownership" errors and
+leaves files `btl` can't change):
+
+```
+sqlite3 /opt/btl-checklist/app/data/checklist.db ".backup '/opt/btl-checklist/backup-before-update.db'"
+cd /opt/btl-checklist/app
+sudo -u btl git pull
+sudo -u btl npm ci
+sudo -u btl npm test
+sudo -u btl npm run build
+systemctl restart btl-checklist
+```
+
+**3. Check it** (on the VM, then in the browser with Ctrl+F5):
+
+```
+systemctl status btl-checklist --no-pager
+journalctl -u btl-checklist -n 20 --no-pager
+curl -kI https://btltestserver.cern.ch
+sudo -u btl git -C /opt/btl-checklist/app log --oneline -3
+```
+
+Status `active (running)`, log `Listening on http://127.0.0.1:3000`, curl `200`, and the top
+`git log` line is the commit you just pushed. (Replace `btltestserver` with the VM's name.)
+
+**What needs what:**
+
+| Changed | Needed on the VM |
+|---|---|
+| Code, pages, `checklist.js`, `Images/`, `package.json` | all of step 2 |
+| Only `.md` docs | `sudo -u btl git pull` (no rebuild/restart) |
+| `.env` on the VM (not in git) | `systemctl restart btl-checklist` |
+| nginx config | `nginx -t` then `systemctl reload nginx` |
+| Database schema | nothing extra: applied automatically on start (that's why step 2 backs up first) |
+
+**Rolling back** if the new version misbehaves:
+
+```
+sudo -u btl git -C /opt/btl-checklist/app log --oneline -5
+sudo -u btl git -C /opt/btl-checklist/app checkout <previous commit id>
+cd /opt/btl-checklist/app
+sudo -u btl npm ci
+sudo -u btl npm run build
+systemctl restart btl-checklist
+```
+
+Only if the bad version changed the database, also restore the backup (entries recorded since
+the update are lost, note them first):
+
+```
+systemctl stop btl-checklist
+install -o btl -g btl -m 600 /opt/btl-checklist/backup-before-update.db /opt/btl-checklist/app/data/checklist.db
+rm -f /opt/btl-checklist/app/data/checklist.db-wal /opt/btl-checklist/app/data/checklist.db-shm
+systemctl start btl-checklist
+```
+
+Fix the problem on your PC, push, then on the VM return to the normal branch before the next
+update: `sudo -u btl git -C /opt/btl-checklist/app checkout main` and repeat step 2.
+
 ---
 
 ## 1. Requirements on the server *(once)*

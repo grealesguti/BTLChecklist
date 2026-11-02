@@ -350,17 +350,8 @@ e-group can read.
 
 ## Updating the app later
 
-Back up the DB first (the cron command by hand), then:
-
-```
-cd /opt/btl-checklist/app
-sudo -u btl git pull
-sudo -u btl npm ci
-sudo -u btl npm run build
-systemctl restart btl-checklist
-```
-
-Database changes are applied automatically on start.
+See [DEPLOY.md → Redeploying after a change](DEPLOY.md#redeploying-after-a-change)
+(push from your PC, back up, pull and rebuild as `btl`, check, roll back if needed).
 
 ## Troubleshooting (seen during the first setup)
 
