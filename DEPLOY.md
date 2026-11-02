@@ -48,6 +48,26 @@ sudo -u btl npm run build
 systemctl restart btl-checklist
 ```
 
+`sudo -u btl <command>` runs just that one command as `btl` (with its deploy key) while you stay
+root. `sudo -u btl git -C /opt/btl-checklist/app pull` works from any folder.
+
+Alternative: switch to `btl` for a while and type the commands without `sudo -u btl`:
+
+```
+su - btl
+cd app
+git pull
+npm ci
+npm test
+npm run build
+exit
+systemctl restart btl-checklist
+```
+
+`su - btl` starts in `/opt/btl-checklist` (btl's home); `exit` returns to root, which is
+needed for `systemctl`. If `su` says "This account is currently not available", `btl` has no
+login shell: use the `sudo -u btl` form.
+
 **3. Check it** (on the VM, then in the browser with Ctrl+F5):
 
 ```
