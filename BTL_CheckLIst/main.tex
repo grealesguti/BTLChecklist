@@ -1,0 +1,174 @@
+% Compile with pdfLaTeX (e.g. Overleaf). Edit metadata and reference fields before issue.
+% Steps transcribed from supplied procedure; no additional torque values inferred.
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=17mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,tabularx,longtable,array,amssymb,xcolor,fancyhdr}
+\definecolor{blue}{RGB}{25,65,90}
+\newcommand{\DocID}{BTL-TRAY-CHK-001}
+\newcommand{\Rev}{A -- Draft}
+\newcommand{\cb}{\(\square\)}
+\newcommand{\linefield}{\rule{0pt}{6mm}\hrulefill}
+\newcommand{\head}[1]{\par\vspace{2mm}{\large\bfseries\color{blue}#1}\par\vspace{1mm}}
+\newcommand{\row}[2]{#1 & #2 & \cb\ P\ \cb\ F & \\[1mm]\hline}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\DocID\quad Rev. \Rev}
+\fancyhead[R]{\small BTL Tray assembly and integration}
+\fancyfoot[L]{\small Tray designation: \rule{35mm}{0.3pt}}
+\fancyfoot[R]{\small Page \thepage}
+\setlength{\headheight}{14pt}\setlength{\parindent}{0pt}
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+\setlength{\LTpre}{1mm}
+\setlength{\LTpost}{1mm}
+ \usepackage{hyperref}
+\begin{document}
+{\LARGE\bfseries\color{blue}BTL Tray assembly and integration}\\[3mm]
+\textbf{Assembly and integration record}\quad Document: \DocID\\[3mm]
+\textbf{Associated manual:}\quad Associated webpage: \\[3mm]
+\begin{tabularx}{\textwidth}{|X|X|}\hline
+Tray designation number: \linefield & Work date(s): \linefield\\\hline
+Roller orientation: \linefield & Insertion location (+-Z) / CMS tray (0-35): \linefield\\\hline
+ \linefield &  \linefield\\\hline
+Loop # / revision: \linefield & Commissioning test record check: \linefield\\\hline
+ \linefield &  \linefield\\\hline
+\end{tabularx}
+\head{People involved -- minimum three}
+\begin{tabularx}{\textwidth}{|p{7mm}|X|p{30mm}|p{26mm}|p{30mm}|}\hline
+ & \textbf{Name} & \textbf{Role} & \textbf{Date} & \textbf{Signature / initials}\\\hline
+1 & & & & \\[2mm]\hline
+2 & & & & \\[2mm]\hline
+3 & & & & \\[2mm]\hline
+4 & & & & \\[2mm]\hline
+\end{tabularx}
+\vspace{2mm}\cb\ At least three people recorded and involved in the work.
+\head{Record instructions and handling reminders}
+P = pass / complete; F = fail / incomplete. Initial and date each step. Record any exception in the final-page log. Fill reference fields and resolve draft wording before issue.\\[2mm]
+\textbf{Handling reminders:} Do not lose the fiber holder, rollers or L profiles. Do not press on the LYSO when fitting Airex / Kapton. Leave the last bottom ear in the pipe region during the specified ear-removal step. Check scaffolding sign-off before pulling from inside. Rebound is expected at the specified pull-out step.
+\head{1. Identification and visual inspection}
+\begin{longtable}{|p{6mm}|p{114mm}|p{18mm}|p{20mm}|}
+\hline
+\textbf{No.}&\textbf{Action / check}&\textbf{Result}&\textbf{Initials / date}\\\hline
+\endfirsthead
+\hline
+\textbf{No.}&\textbf{Action / check}&\textbf{Result}&\textbf{Initials / date}\\\hline
+\endhead
+\row{01}{Check the tray designation number and confirm commissioning tests have passed. Record the test reference above.}
+\row{02}{Put the tray on the rotisserie.}
+\row{03}{Visually inspect fiber pigtails against the referenced drawings.}
+\row{04}{Check rollers are in place with the required orientation and location. Verify torque control to \textbf{0.6 N\,m}; washer \textbf{3.2 OD, 0.5 mm} and flat-head screw . Manual link \href{https://cernbox.cern.ch/s/ncrrlCA8K80F5Tv}{https://cernbox.cern.ch/s/ncrrlCA8K80F5Tv}}
+\row{05}{Check preheater sensors are not damaged. Check cabling colours against the referenced documentation .}
+\row{06}{Check Grounding braid according to manual \href{https://cernbox.cern.ch/s/sHEXL3VeTG9RCM3}{https://cernbox.cern.ch/s/sHEXL3VeTG9RCM3}}
+\end{longtable}
+\vspace{2mm}
+Roller location / orientation drawing reference (view pipes at the front left wing / right wing): \linefield
+
+\head{2. Assembly and service plate}
+\begin{longtable}{|p{6mm}|p{114mm}|p{18mm}|p{20mm}|}
+\hline
+\textbf{No.}&\textbf{Action / check}&\textbf{Result}&\textbf{Initials / date}\\\hline
+\endfirsthead
+\hline
+\textbf{No.}&\textbf{Action / check}&\textbf{Result}&\textbf{Initials / date}\\\hline
+\endhead
+\row{06}{Add pipe clamps and preheaters. Fasteners: \textbf{M2.2$\times$10 BOSSARD 3772865, M2.2$\times$14 BOSSARD 3772867 and M3$\times$16} CBSTSE3-16, with \textbf{M3 nuts with nylon threadlock inserts BOSSARD 1397176}.}
+\row{07}{Add the service plate. Retain the \textbf{fiber holder, rollers and L profiles}; do not lose these components. Check service plate has the grounding insert nut SSFH-315SF-SUS}
+\row{08}{Check the fiber holder and rollers are in the correct location for the service plate (\textbf{M2.2$\times$5 BOSSARD 1727702}); fit / check L profiles (\textbf{M2$\times$4}).}
+\row{09}{After adding the service plate, connect the fiber to it and connect / secure the cables with \textbf{M3 standoffs}.}
+\row{10}{Add manifold holders to the service plate (\textbf{M2.2$\times$6 BOSSARD 1727796}).}
+\row{11}{Add Airex with double-sided Kapton; add \textbf{four single-sided Kapton pieces to the edges}. \textbf{Do not press on the LYSO.}}
+\row{12}{Before installation, clean the intermediate-beam grooves with isopropyl alcohol. Clean the beams in the BTST as well. Apply PTFE lubricant (if not done previously and with small nozzle,  not 1m away from the groove, only in the groove) to both the intermediate beams and BTST beams, and to the sides of the Bosch profiles before fitting the intermediate beams and sliders. Add intermediate beams to the Bosch profiles; check the profile nuts are correctly rotated and properly seated in the grooves. Check screws for intermediate beam are not lifting the black adapters or pushing against the profiles.}
+\row{13}{Start removing the ears from the Bosch profiles. \textbf{Leave the last ear at the bottom in the pipe region.}}
+\row{14}{Readjust the intermediate beams to the edge of the profile in the pipes region.}
+\row{15}{Add adapters to the BTST beams and add the pulling tool (\textbf{M2.5$\times$8}).}
+\row{16}{Add the \textbf{four tray spacers}.}
+\end{longtable}
+\head{Fastener and component reference}
+\begin{tabularx}{\textwidth}{|X|X|}\hline
+\textbf{Application} & \textbf{Supplied specification}\\\hline
+Rollers & 0.6 N\,m; washer 3.2 OD, 0.5 mm; flat-head screw\\\hline
+Pipe clamps / preheaters & M2.2$\times$10, M2.2$\times$14, M3$\times$16; M3 nylon-insert nuts\\\hline
+Service-plate roller / holder location & M2.2$\times$6\\\hline
+L profiles & M2$\times$4\\\hline
+Cable connection / support & M3 standoffs\\\hline
+Manifold holders & M2.2$\times$6\\\hline
+BTST adapters / pulling tool & M2.5$\times$8\\\hline
+\end{tabularx}
+\vspace{3mm}
+\textbf{Drawing clarification fields:} Confirm washer OD unit and roller screw designation; confirm fastener allocation for the fiber holder / rollers and BTST adapters / pulling tool.\\[2mm]
+Reference / clarification: \linefield
+
+\head{3. Weighing, transfer and insertion}
+\begin{longtable}{|p{6mm}|p{114mm}|p{18mm}|p{20mm}|}
+\hline
+\textbf{No.}&\textbf{Action / check}&\textbf{Result}&\textbf{Initials / date}\\\hline
+\endfirsthead
+\hline
+\textbf{No.}&\textbf{Action / check}&\textbf{Result}&\textbf{Initials / date}\\\hline
+\endhead
+\row{17}{Turn the tray around and remove it from the rotisserie.}
+\row{18}{Weigh the tray using \textbf{two scales}. Record both readings and their total below.}
+\row{19}{\textbf{Before using the lifting table, block its wheels and verify it is secured.} Position the tray on the lifting table.}
+\row{20}{Verify PTFE lubricant (Galaxus 12452644) has been applied to the sides of the Bosch profiles before fitting the sliders (step 12). Position the nylon sliders on the sides of the Bosch profiles.}
+\row{21}{\textbf{Before using the insertion tool, check its wheels are locked.} Position the tray in the insertion tool; tighten the sliders.}
+\row{22}{\textbf{Mark the slider locations before rotation (distance to be defined).} Rotate the insertion tool to the final location with \textbf{two people checking for collisions, one at each end}. Record their names below.}
+\row{23}{Release the sliders and push the tray into location.}
+\row{24}{Adjust using the white knobs.}
+\row{25}{\textbf{Check the scaffolding has been signed off} before pulling from inside it. Record the sign-off reference below.}
+\row{26}{Pull from inside the scaffolding until the services region.}
+\row{26}{Push the services area into the tube, check carefully no interaction with airexx.}
+\row{27}{Add the weighted plates on the insertion tool and push out the craddle. \textbf{Rebound is expected if not done properly.} Record any unexpected behaviour.}
+\row{28}{Put the insertion tool back at the bottom.}
+\row{29}{Remove the Bosch profile.}
+\row{29}{Remove pulling tool.}
+\row{30}{Store the intermediate beam and related components. Record storage location and component accounting on the next page.}
+\end{longtable}
+\head{Weight and positioning records}
+\begin{tabularx}{\textwidth}{|X|X|}\hline
+Scale 1 ID: \linefield & Scale 2 ID: \linefield\\\hline
+Scale 1 reading (kg): \linefield & Scale 2 reading (kg): \linefield\\\hline
+Total tray mass (kg): \linefield & Recorded by / date: \linefield\\\hline
+Final insertion location: \linefield & Orientation reference: \linefield\\\hline
+\end{tabularx}
+\vspace{3mm}
+Scaffolding sign-off reference: \linefield\\[2mm]
+Signed by / date: \linefield\\[2mm]
+Rotation collision check -- person at end 1: \linefield\\[2mm]
+Rotation collision check -- person at end 2: \linefield\\[2mm]
+Pull-out / rebound observations: \linefield
+
+\head{4. Component accounting and storage}
+\begin{tabularx}{\textwidth}{|X|p{33mm}|X|}\hline
+\textbf{Component} & \textbf{Accounted for (initials)} & \textbf{Installed / storage location / remarks}\\\hline
+Fiber holder & & \\[2mm]\hline
+Rollers & & \\[2mm]\hline
+L profiles & & \\[2mm]\hline
+Intermediate beam(s) & & \\[2mm]\hline
+Bosch profile(s) & & \\[2mm]\hline
+Removed ears / related components & & \\[2mm]\hline
+Other related components & & \\[2mm]\hline
+\end{tabularx}
+\head{5. Exceptions and corrective actions}
+\begin{tabularx}{\textwidth}{|p{10mm}|X|X|p{25mm}|}\hline
+\textbf{Step} & \textbf{Issue / reference} & \textbf{Action / recheck result} & \textbf{Name / date}\\\hline
+ & & & \\[4mm]\hline
+ & & & \\[4mm]\hline
+ & & & \\[4mm]\hline
+\end{tabularx}
+\head{6. Completion review}
+\cb\ All 30 assembly / integration steps completed and recorded.\\[2mm]
+\cb\ Tray designation, roller orientation and insertion location recorded.\\[2mm]
+\cb\ Commissioning test and scaffolding sign-off references recorded.\\[2mm]
+\cb\ Two-scale mass recorded; components accounted for and storage recorded.\\[2mm]
+\cb\ Exceptions resolved or documented for authorized review.\\[3mm]
+\textbf{31. Record upload:} \cb\ Upload the completed digitized checklist to the common CERNbox if not done in the web.\\[2mm]
+CERNbox file / folder link: \linefield\\[2mm]
+Uploaded by / date: \linefield\\[3mm]
+Status: \cb\ Complete\quad\cb\ On hold\\[3mm]
+Work lead name / signature: \linefield\\[3mm]
+Reviewer name / signature: \linefield\\[3mm]
+Completion date / time: \linefield
+\vspace{2mm}
+\footnotesize Revision history: A -- Draft -- [date] -- Initial BTL procedure checklist.\\
+Engineering clarification before issue: confirm wording / reference for step 27 (``lock the location in the disk and pull out the tray'') and the fastener details identified in the fastener reference.
+\end{document}
