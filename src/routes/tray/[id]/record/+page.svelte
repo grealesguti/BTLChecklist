@@ -1,10 +1,13 @@
 <script>
 	import { onMount } from 'svelte';
-	import { SECTIONS, FIELDS, HEADER_FIELDS, COMPONENTS, rollerOrientation, sectionFields } from '#lib/checklist.js';
+	import { CHECKLISTS } from '#lib/checklists/index.js';
+	import { sectionFields, COMPLETION_FIELDS } from '#lib/checklists/common.js';
 
 	let { data } = $props();
+	let cl = $derived(CHECKLISTS[data.tray.checklist]);
 	let s = $derived(data.state);
-	const when = (e) => (e ? `${e.person_name}, ${e.at.slice(0, 10)}` : '');
+	const derivedIn = (steps) => cl.derived.filter((d) => steps.some((st) => st.n === d.at));
+	const when = (e) => (e ? `${e.person_name}, ${e.at.slice(0, 10)}${e.payload.checkedByName ? ` · second check: ${e.payload.checkedByName}` : ''}` : '');
 	const val = (e) => (e ? String(e.payload.name ?? e.payload.value) : '');
 	const rev = (e) => (e && e.rev > 1 ? ` (rev. ${e.rev})` : '');
 	// "Export PDF" on the checklist links here with ?print: open the print / Save-as-PDF dialog directly.
@@ -19,7 +22,7 @@
 		<button onclick={() => window.print()}>Print / Save as PDF</button>
 	</p>
 
-	<h1>BTL Tray assembly and integration</h1>
+	<h1>{cl.docTitle}</h1>
 	<p class="small">
 		{data.tray.checklist_rev} · Exported {data.exportedAt.slice(0, 16).replace('T', ' ')} UTC ·
 		entries marked “(rev. N)” were revised; full log at the end.
@@ -27,11 +30,13 @@
 
 	<table>
 		<tbody>
-			<tr><th>Tray designation number</th><td>{data.tray.designation}</td></tr>
-			{#each HEADER_FIELDS as k (k)}
-				<tr><th>{FIELDS[k].label}</th><td>{val(s.fields[k])}{rev(s.fields[k])}</td></tr>
+			<tr><th>{cl.unit} designation number</th><td>{data.tray.designation}</td></tr>
+			{#each cl.HEADER_FIELDS as k (k)}
+				<tr><th>{cl.FIELDS[k].label}</th><td>{val(s.fields[k])}{rev(s.fields[k])}</td></tr>
 			{/each}
-			<tr><th>Roller orientation (automatic)</th><td>{rollerOrientation(s.fields.insertionSide?.payload.value, s.fields.cmsTray?.payload.value) ?? ''}</td></tr>
+			{#each cl.derived.filter((d) => d.at === 'header') as d (d.label)}
+				<tr><th>{d.label} (automatic)</th><td>{d.value(s.fields) ?? ''}</td></tr>
+			{/each}
 		</tbody>
 	</table>
 
@@ -45,7 +50,7 @@
 		</tbody>
 	</table>
 
-	{#each SECTIONS as section (section.title)}
+	{#each cl.SECTIONS as section (section.title)}
 		<h2>{section.title}</h2>
 		<table>
 			<thead><tr><th>No.</th><th>Action / check</th><th>Result</th><th>Name / date</th></tr></thead>
@@ -54,7 +59,16 @@
 					{@const a = s.steps[st.n]}
 					<tr>
 						<td>{st.n}</td>
-						<td>{st.text}{#if st.warn} <strong>{st.warn}</strong>{/if}{#if a?.payload.comment}<br /><em>Comment: {a.payload.comment}</em>{/if}</td>
+						<td>
+							{st.text}{#if st.warn} <strong>{st.warn}</strong>{/if}{#if a?.payload.comment}<br /><em>Comment: {a.payload.comment}</em>{/if}
+							{#if s.photos.some((p) => p.payload.step === st.n)}
+								<div class="photos">
+									{#each s.photos.filter((p) => p.payload.step === st.n) as p (p.key)}
+										<img src="/photo/{p.payload.file}" alt={p.payload.caption || `Photo of step ${st.n}`} title="{p.person_name}, {p.at.slice(0, 16).replace('T', ' ')} UTC" />
+									{/each}
+								</div>
+							{/if}
+						</td>
 						<td>{a ? (a.payload.result === 'P' ? '☒ P ☐ F' : '☐ P ☒ F') : '☐ P ☐ F'}{rev(a)}</td>
 						<td>{when(a)}</td>
 					</tr>
@@ -64,25 +78,37 @@
 		<table>
 			<tbody>
 				{#each sectionFields(section) as k (k)}
-					<tr><th>{FIELDS[k].label}</th><td>{val(s.fields[k])}{rev(s.fields[k])}</td></tr>
+					<tr><th>{cl.FIELDS[k].label}</th><td>{val(s.fields[k])}{rev(s.fields[k])}</td></tr>
+				{/each}
+				{#each derivedIn(section.steps) as d (d.label)}
+					<tr><th>{d.label} (automatic)</th><td>{d.value(s.fields) ?? '—'}</td></tr>
 				{/each}
 			</tbody>
 		</table>
 	{/each}
-	<p><strong>Total tray mass:</strong> {data.mass ?? '—'} kg</p>
 
-	<h2>4. Component accounting and storage</h2>
-	<table>
-		<thead><tr><th>Component</th><th>Accounted</th><th>Location / remarks</th><th>Name / date</th></tr></thead>
-		<tbody>
-			{#each Object.entries(COMPONENTS) as [k, label] (k)}
-				{@const a = s.components[k]}
-				<tr><td>{label}</td><td>{a?.payload.accounted ? '☒' : '☐'}{rev(a)}</td><td>{a?.payload.remarks ?? ''}</td><td>{when(a)}</td></tr>
-			{/each}
-		</tbody>
-	</table>
+	{#each cl.refTables as t (t.title)}
+		<h2>{t.title}</h2>
+		<table>
+			<thead><tr>{#each t.head as h (h)}<th>{h}</th>{/each}</tr></thead>
+			<tbody>{#each t.rows as row, r (r)}<tr>{#each row as c, j (j)}<td>{c}</td>{/each}</tr>{/each}</tbody>
+		</table>
+	{/each}
 
-	<h2>5. Exceptions and corrective actions</h2>
+	{#if cl.T.components}
+		<h2>{cl.T.components}</h2>
+		<table>
+			<thead><tr><th>Component</th><th>Accounted</th><th>Location / remarks</th><th>Name / date</th></tr></thead>
+			<tbody>
+				{#each Object.entries(cl.COMPONENTS) as [k, label] (k)}
+					{@const a = s.components[k]}
+					<tr><td>{label}</td><td>{a?.payload.accounted ? '☒' : '☐'}{rev(a)}</td><td>{a?.payload.remarks ?? ''}</td><td>{when(a)}</td></tr>
+				{/each}
+			</tbody>
+		</table>
+	{/if}
+
+	<h2>{cl.T.exceptions}</h2>
 	<table>
 		<thead><tr><th>Step</th><th>Issue</th><th>Action / recheck result</th><th>Name / date</th></tr></thead>
 		<tbody>
@@ -92,11 +118,11 @@
 		</tbody>
 	</table>
 
-	<h2>6. Completion review</h2>
+	<h2>{cl.T.completion}</h2>
 	<table>
 		<tbody>
-			{#each ['status', 'workLead', 'reviewer', 'cernboxLink'] as k (k)}
-				<tr><th>{FIELDS[k].label}</th><td>{val(s.fields[k])}{rev(s.fields[k])}</td></tr>
+			{#each COMPLETION_FIELDS as k (k)}
+				<tr><th>{cl.FIELDS[k].label}</th><td>{val(s.fields[k])}{rev(s.fields[k])}</td></tr>
 			{/each}
 		</tbody>
 	</table>

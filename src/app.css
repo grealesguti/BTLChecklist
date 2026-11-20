@@ -44,8 +44,9 @@ a { color: var(--accent); }
 h1 { margin: 0.1em 0; font-size: 1.6rem; }
 h2 { margin: 0 0 0.75rem; font-size: 1.15rem; }
 
+/* Not sticky: on a record page the record bar (tray + "recording as") is the one that stays visible. */
 .topbar {
-	position: sticky; top: 0; z-index: 10;
+	position: relative; z-index: 10;
 	display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; justify-content: space-between;
 	padding: 0.6rem 16px; background: var(--card); border-bottom: 1px solid var(--border);
 }
@@ -129,16 +130,41 @@ th, td { text-align: left; vertical-align: top; padding: 0.4rem 0.5rem; border-b
 tr.superseded td { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--muted); }
 tr.superseded td:last-child { text-decoration: none; }
 
-.toast { position: sticky; top: 3.4rem; z-index: 9; max-width: 980px; margin: 0.5rem auto 0; padding: 0.6rem 1rem; background: var(--bad-bg); color: var(--bad); border-radius: var(--radius); font-weight: 600; }
+.toast { position: sticky; top: 2.6rem; z-index: 9; max-width: 980px; margin: 0.5rem auto 0; padding: 0.6rem 1rem; background: var(--bad-bg); color: var(--bad); border-radius: var(--radius); font-weight: 600; }
 
 .record { max-width: 900px; }
 .record table { border: 1px solid var(--border); }
 .record th, .record td { border: 1px solid var(--border); }
 
+/* Phones: big touch targets, 16px inputs (no iOS zoom), one control per line. */
 @media (max-width: 600px) {
+	main { padding: 10px; }
+	.card { padding: 0.8rem; }
 	.hero-side { align-items: stretch; width: 100%; }
+	.step { gap: 0.5rem; }
 	.step-n { flex-basis: 2rem; height: 2rem; font-size: 0.85rem; }
+	input, select, textarea, button, .button { font-size: 16px; min-height: 44px; }
+	.inline { flex-direction: column; align-items: stretch; }
+	.inline > * { width: 100%; }
+	.pass-btn, .fail-btn { padding: 0.7rem; font-weight: 700; }
+	.grid { grid-template-columns: 1fr; }
+	.topbar { padding: 0.5rem 10px; }
+	.who form.inline { width: 100%; }
 }
+
+/* Reference pictures: numbered markers + legend, "to avoid" in red */
+.marked { position: relative; display: inline-block; max-width: 100%; }
+.marks { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.marks circle { fill: #e00034; stroke: #fff; stroke-width: 2.5; }
+.marks text { fill: #fff; font: 700 14px system-ui, sans-serif; }
+.legend { margin: 0.3rem 0 0.6rem; padding-left: 1.6rem; font-size: 0.9rem; }
+.legend li::marker { color: #e00034; font-weight: 700; }
+.step-img figure { margin: 0.3rem 0; }
+.step-img.avoid summary { color: var(--bad); font-weight: 700; }
+.step-img.avoid img { outline: 4px solid var(--bad); }
+.avoid-text { color: var(--bad); font-weight: 700; font-size: 0.9rem; }
+.prior-warn { border-left: 5px solid var(--bad); }
+.contact { max-width: 980px; margin: 0 auto; padding: 0.8rem 16px 1.5rem; font-size: 0.85rem; color: var(--muted); }
 
 @media print {
 	:root { --bg: #fff; --card: #fff; --text: #000; --muted: #444; --border: #999; }
@@ -148,3 +174,17 @@ tr.superseded td:last-child { text-decoration: none; }
 	.page-break { break-before: page; }
 	tr { break-inside: avoid; }
 }
+
+/* Checklist switcher on the home page */
+.tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+.tabs a { padding: 0.45rem 0.9rem; border: 1px solid var(--border); border-radius: 999px; background: var(--card); color: var(--text); text-decoration: none; }
+.tabs a.active { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
+
+/* Step photos */
+.photos { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.4rem 0; }
+.photos img { height: 96px; width: auto; max-width: 100%; border-radius: 6px; border: 1px solid var(--border); object-fit: cover; }
+.photo-upload input[type='file'] { max-width: 100%; }
+
+/* Record + recording-as bar: stays visible so nobody ticks the wrong tray or under someone else's name */
+.record-bar { position: sticky; top: 0; z-index: 5; margin: 0 0 1rem; padding: 0.5rem 0.8rem; border-radius: var(--radius); background: var(--accent); color: var(--accent-text); font-size: 0.9rem; }
+@media print { .record-bar { display: none; } }

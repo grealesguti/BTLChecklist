@@ -1,15 +1,14 @@
 import { loadTray } from '#lib/server/tray.js';
-import { describe, totalMass, completionIssues } from '#lib/server/state.js';
+import { describe, completionIssues } from '#lib/server/state.js';
 
 export function load({ params }) {
-	const { tray, state } = loadTray(params.id);
-	const { steps, fields, involved, components, exceptions } = state;
+	const { tray, cl, state } = loadTray(params.id);
+	const { steps, fields, involved, components, exceptions, photos } = state;
 	return {
 		tray,
-		state: { steps, fields, involved, components, exceptions },
-		log: state.log.map((e) => ({ ...e, d: describe(e) })),
-		mass: totalMass(state),
-		issues: completionIssues(state),
+		state: { steps, fields, involved, components, exceptions, photos },
+		log: state.log.map((e) => ({ ...e, d: describe(e, cl) })),
+		issues: completionIssues(state, cl),
 		exportedAt: new Date().toISOString()
 	};
 }

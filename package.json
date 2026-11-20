@@ -11,6 +11,9 @@
   },
   "scripts": {
     "dev": "vite dev",
+    "dev:smoke": "node --env-file=smoke.env node_modules/vite/bin/vite.js dev --port 5199 --strictPort",
+    "smoke": "node scripts/smoke.mjs http://localhost:5199",
+    "check-upgrade": "node scripts/check-upgrade.mjs",
     "build": "vite build",
     "start": "node --env-file=.env build",
     "test": "node --test"

@@ -1,6 +1,17 @@
 node_modules
 build
 .svelte-kit
-data
-.env
 *Zone.Identifier
+tmp
+
+# Never in git: the record and the server settings. Root users, contact phone/email, people,
+# sessions and photos live in the database / uploads; ROOT_USERS and other settings in .env.
+data
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+uploads
+.env
+.env.*
+!.env.example

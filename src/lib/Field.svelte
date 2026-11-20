@@ -1,7 +1,7 @@
 <script>
 	import { enhance } from '$app/forms';
 	import Meta from './Meta.svelte';
-	import { allowedPerson } from './checklist.js';
+	import { allowedPerson } from './checklists/common.js';
 
 	let { key, def, entry, people } = $props();
 	const maxlength = $derived(def.type === 'long' ? 1000 : def.type === 'url' ? 300 : 100);
@@ -29,8 +29,8 @@
 		{:else if def.type === 'check'}
 			{#if !entry}<label class="check"><input id="f-{key}" name="value" type="checkbox" value="Passed" required /> Passed</label>{/if}
 		{:else if def.type === 'date'}
-			<!-- Native picker; prefilled with today (local), still needs Save. -->
-			<input id="f-{key}" name="value" type="date" required value={new Date().toLocaleDateString('sv')} />
+			<!-- Native picker; prefilled with today (local) unless noDefault (e.g. expiry dates), still needs Save. -->
+			<input id="f-{key}" name="value" type="date" required value={def.noDefault ? '' : new Date().toLocaleDateString('sv')} />
 		{:else if def.type === 'long'}
 			<textarea id="f-{key}" name="value" required {maxlength} rows="2" placeholder={entry ? 'New value…' : ''}></textarea>
 		{:else}

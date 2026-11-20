@@ -1,6 +1,16 @@
 node_modules
 build
 .svelte-kit
-data
-.env
 *Zone.Identifier
+tmp
+
+# Never in the image: the record and the server settings (mount data/ and pass .env at run time).
+data
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+uploads
+.env
+.env.*
+!.env.example

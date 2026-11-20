@@ -1,4 +1,4 @@
-import { allowedPerson } from '#lib/checklist.js';
+import { allowedPerson } from '#lib/checklists/common.js';
 
 /** Thrown for user input problems; turned into a 400 with the message shown. */
 export class Invalid extends Error {}
@@ -41,10 +41,23 @@ export function password(v) {
 
 const DESIGNATION_RE =/^[A-Za-z0-9][A-Za-z0-9 ._\-]{0,39}$/;
 export function designation(v) {
-	const s = text(v, 40, { label: 'Tray designation', required: true });
-	if (!DESIGNATION_RE.test(s)) throw new Invalid('Tray designation: letters, digits, space . _ - only (max 40)');
+	const s = text(v, 40, { label: 'Designation', required: true });
+	if (!DESIGNATION_RE.test(s)) throw new Invalid('Designation: letters, digits, space . _ - only (max 40)');
 	return s;
 }
+
+/** Contact details shown on every page: name, phone (required), email (optional). */
+export function contact(data) {
+	const name = personName(data.get('name'));
+	const phone = text(data.get('phone'), 30, { label: 'Phone', required: true });
+	if (!/^\+?[0-9][0-9 ()./-]{3,28}$/.test(phone)) throw new Invalid('Phone: digits, spaces, + ( ) . / - only, e.g. +41 22 767 1234 or 71234');
+	const email = text(data.get('email'), 120, { label: 'Email' });
+	if (email && !/^[^\s@<>"']{1,64}@[A-Za-z0-9.-]{1,190}\.[A-Za-z]{2,}$/.test(email)) throw new Invalid('Email: invalid address');
+	return { name, phone, email };
+}
+
+/** YYYY-MM-DD before today (UTC). Used for expiry dates, at saving and again when the step passes. */
+export const expired = (date, now = Date.now()) => date < new Date(now).toISOString().slice(0, 10);
 
 /** Validates a checklist field value against its definition. Empty values are rejected: nothing can be cleared. */
 export function fieldValue(def, raw, findPerson) {
@@ -74,6 +87,7 @@ export function fieldValue(def, raw, findPerson) {
 		case 'date':
 			if (!/^\d{4}-\d{2}-\d{2}$/.test(s) || new Date(Date.parse(s) || 0).toISOString().slice(0, 10) !== s)
 				throw new Invalid(`${def.label}: invalid date`);
+			if (def.notPast && expired(s)) throw new Invalid(`${def.label}: ${s} is in the past — expired, do not use.`);
 			return { value: s };
 		case 'url': {
 			let u;

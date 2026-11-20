@@ -1,8 +1,15 @@
 # BTL Tray Insertion Checklist — Web App Roadmap
 
-Source of truth: `BTL_CheckLIst/main.tex` (BTL-TRAY-CHK-001, Rev. A – Draft).
+Source of truth: `src/lib/checklists/tray/docs/main.tex` (BTL-TRAY-CHK-001, Rev. A – Draft).
 Goal: people fill the checklist step by step on a server; every action is logged
 (who, what, when) and the record cannot be silently altered.
+
+**Update (2026-11):** the app now holds several checklists, one folder each in
+`src/lib/checklists/<id>/` (tray insertion, PT1000 sensor gluing, preheater resistor gluing;
+one record per tray in each). Added since: photo uploads per step (`data/uploads/`,
+content-addressed, never deleted), curing timers, cross-checklist dependency, root users
+(`ROOT_USERS`). Where this roadmap says `src/lib/checklist.js` / `Images/`, read
+`src/lib/checklists/tray/checklist.js` / `src/lib/checklists/tray/images/`. See README.
 
 ---
 

@@ -271,6 +271,8 @@ server {
     server_name NEWHOST.cern.ch;
     ssl_certificate     /etc/pki/tls/certs/NEWHOST.crt;
     ssl_certificate_key /etc/pki/tls/private/NEWHOST.key;
+    # Photo uploads (browsers shrink them; server max 4 × 4 MB); matches BODY_SIZE_LIMIT=20M in .env.
+    client_max_body_size 20m;
     location / {
         proxy_pass http://127.0.0.1:3000;
         proxy_set_header Host $host;
@@ -295,8 +297,9 @@ curl -kI https://NEWHOST.cern.ch
 
 ## 9. Move the data from the old VM
 
-The whole record is `data/checklist.db` (plus `.env` for the settings). Do this in a short
-announced stop; nobody may record anything on the old VM afterwards.
+The whole record is `data/checklist.db` and the photos in `data/uploads/` (plus `.env` for the
+settings). Copy `data/uploads/` the same way as the database (e.g. `tar czf` it). Do this in a
+short announced stop; nobody may record anything on the old VM afterwards.
 
 On **OLDHOST**:
 
@@ -334,10 +337,26 @@ crontab -u btl -e
 
 ```
 0 2 * * * sqlite3 /opt/btl-checklist/app/data/checklist.db ".backup '/opt/btl-checklist/backup-$(date +\%F).db'"
+15 2 * * * rsync -a /opt/btl-checklist/app/data/uploads/ /opt/btl-checklist/backup-uploads/
 ```
 
-OpenStack does not back up VM disks: copy the backups regularly to an EOS/CERNbox folder the
-e-group can read.
+Photos are never changed or deleted by the app (each file is named by its SHA-256), so the
+`rsync` copy only grows. OpenStack does not back up VM disks: copy both regularly to an
+EOS/CERNbox folder the e-group can read.
+
+## 10a. Updating to a new version (existing data is kept as is)
+
+```
+sudo -u btl sqlite3 /opt/btl-checklist/app/data/checklist.db ".backup '/opt/btl-checklist/before-update.db'"
+cd /opt/btl-checklist/app && sudo -u btl git pull && sudo -u btl npm ci
+sudo -u btl mkdir -p tmp && sudo -u btl cp /opt/btl-checklist/before-update.db tmp/check.db
+sudo -u btl npm run check-upgrade -- tmp/check.db    # must print OK, otherwise stop here
+sudo -u btl npm run build && systemctl restart btl-checklist
+```
+
+For the multi-checklist / photo version also add to `.env`: `BODY_SIZE_LIMIT=20M` (replacing
+`64K`), optionally `ROOT_USERS=<your username>`, and `client_max_body_size 20m;` in the nginx
+`server { listen 443 … }` block (then `nginx -t && systemctl reload nginx`).
 
 ## 11. Retire the old VM
 

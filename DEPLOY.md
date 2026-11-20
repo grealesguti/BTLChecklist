@@ -84,11 +84,11 @@ Status `active (running)`, log `Listening on http://127.0.0.1:3000`, curl `200`,
 
 | Changed | Needed on the VM |
 |---|---|
-| Code, pages, `checklist.js`, `Images/`, `package.json` | all of step 2 |
+| Code, pages, `src/lib/checklists/*/checklist.js`, checklist `images/`, `package.json` | all of step 2 |
 | Only `.md` docs | `sudo -u btl git pull` (no rebuild/restart) |
 | `.env` on the VM (not in git) | `systemctl restart btl-checklist` |
 | nginx config | `nginx -t` then `systemctl reload nginx` |
-| Database schema | nothing extra: applied automatically on start (that's why step 2 backs up first) |
+| Database schema | applied automatically on start, additive only (existing rows never change). Prove it first on a copy: `npm run check-upgrade -- tmp/check.db` (README) |
 
 **Rolling back** if the new version misbehaves:
 
@@ -135,7 +135,8 @@ update: `sudo -u btl git -C /opt/btl-checklist/app checkout main` and repeat ste
 
 Copy the project folder **without** the generated or local-only folders:
 `node_modules`, `build`, `.svelte-kit`, `data`, `.env` and the `*Zone.Identifier` files.
-The `Images/` folder **must** be copied, because the build needs it.
+The `src/lib/checklists/*/images/` folders **must** be copied, because the build needs them.
+`data/` holds the database **and** the uploaded photos (`data/uploads/`): back up and move both.
 
 From your machine, with rsync:
 
@@ -451,4 +452,5 @@ Also update these when they change:
 | B: `npm error EPERM … chmod`, `vite: not found`, `Resource busy 'build'` | Signs of running `npm` directly on the SMB share (old setup): use the image build of B4 instead. |
 | `ExperimentalWarning: SQLite` in the log | Harmless. |
 | `EADDRINUSE` | Another program uses the port: change `PORT` in `.env` and in the tunnel. |
-| Images missing on step pages | `Images/` was not copied before `npm run build`; copy it and rebuild. |
+| Images missing on step pages | `src/lib/checklists/*/images/` not copied before `npm run build`; copy them and rebuild. |
+| Photo upload fails ("413" / "Payload Too Large") | Set `BODY_SIZE_LIMIT=20M` in `.env` and `client_max_body_size 20m;` in nginx. |

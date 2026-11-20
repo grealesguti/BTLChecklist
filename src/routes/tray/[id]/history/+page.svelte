@@ -47,7 +47,7 @@
 					<td></td>
 					<td class="nowrap">{data.tray.created_at.slice(0, 16).replace('T', ' ')}</td>
 					<td>{data.tray.created_by_name}<br /><span class="muted small">{data.tray.email}</span></td>
-					<td><strong>Tray record created</strong></td>
+					<td><strong>Record created</strong></td>
 					<td class="small">original</td>
 				</tr>
 			</tbody>
